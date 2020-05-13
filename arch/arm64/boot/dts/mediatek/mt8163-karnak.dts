@@ -26,13 +26,13 @@
       #size-cells = <2>;
 	  ranges;
       stdout-path = "display0";
-      framebuffer0: framebuffer@ox98800000 {
+      framebuffer0: framebuffer@0x98800000 {
         compatible = "simple-framebuffer";
         reg = <0x0 0x98800000 0x0 0xe00000>;
         width = <1280>;
         height = <800>;
-        stride = <5120>;
-        format = "r5g6b5";
+        stride = <(1280*5)>;
+        format = "r8g8b8";
 		status = "okay";
 		};
 };

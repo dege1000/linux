@@ -42,7 +42,7 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x1>;
-			enable-method = "psci";
+
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
@@ -53,7 +53,7 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x2>;
-			enable-method = "psci";
+
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
@@ -64,12 +64,20 @@
 			device_type = "cpu";
 			compatible = "arm,cortex-a53";
 			reg = <0x3>;
-			enable-method = "psci";
+			
 			cpu-idle-states = <&CPU_SLEEP_0>;
 			cpu-release-addr = <0x0 0x40000200>;
 			clock-frequency = <1300000000>;
 			clock-names = "cpu", "intermediate";
 		};
+	psci {
+		compatible  = "arm,psci";
+		method      = "smc";
+		cpu_suspend = <0x84000001>;
+		cpu_off     = <0x84000002>;
+		cpu_on      = <0x84000003>;
+		affinity_info = <0x84000004>;
+	};
 
 		idle-states {
 			entry-method = "psci";
@@ -256,7 +264,22 @@
 			interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
 				     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>;
-
+			watchdog: watchdog@10007000 {
+			compatible = "mediatek,mt8173-wdt",
+				     "mediatek,mt6589-wdt";
+			reg = <0 0x10007000 0 0x100>;
+		    };
+		    pwrap: pwrap@1000d000 {
+			compatible = "mediatek,mt8163-pwrap";
+			reg = <0 0x1000d000 0 0x1000>;
+			reg-names = "pwrap";
+			interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
+		//	resets = <&infracfg MT8163_INFRA_PMIC_WRAP_RST>;
+			clocks = <&topckgen CLK_TOP_PMICSPI_SEL>,
+				 <&infracfg CLK_INFRA_PMIC_AP>;
+			clock-names = "spi",
+				      "wrap";
+		};
 			spi_pins_a: spi1 {
 				spi_pads: pins_spi {
 					pinmux = <MT8163_PIN_53_SPI_CS__FUNC_SPI_CSB>,
@@ -385,7 +408,8 @@
 				};
 			};
 
-			/* UART GPIO Settings - End */
+			
+/* UART GPIO Settings - End */
 		};
 
 		dramco: dramco@10004000 {
@@ -430,16 +454,6 @@
 			reg = <0 0x1000cf00 0 0x100>;
 		};
 
-		pwrap: pwrap@1000d000 {
-			compatible = "mediatek,mt8173-pwrap";
-			reg = <0 0x1000d000 0 0x1000>;
-			reg-names = "pwrap-base";
-			interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&topckgen CLK_TOP_PMICSPI_SEL>,
-				 <&infracfg CLK_INFRA_PMIC_AP>;
-			clock-names = "spi",
-				      "pwrap";
-		};
 
 		devapc_ao@1000e000 {
 			compatible = "mediatek,mt8173-devapc_ao";
