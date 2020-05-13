@@ -29,8 +29,8 @@
       framebuffer0: framebuffer@0x98800000 {
         compatible = "simple-framebuffer";
         reg = <0x0 0x98800000 0x0 0xe00000>;
-        width = <1280>;
-        height = <800>;
+        width = <800>;
+        height = <1280>;
         stride = <(1280*5)>;
         format = "r8g8b8";
 		status = "okay";
@@ -45,6 +45,37 @@
     pwm_config = <0 0 0 0 0>;
     default_brightness = < >;
     brightness_normalize_param = < >;
+};
+&mmc0 {
+	pinctrl-names = "default", "state_uhs";
+	pinctrl-0 = <&mmc0_pins_default>;
+	pinctrl-1 = <&mmc0_pins_uhs>;
+	status = "okay";
+	bus-width = <8>;
+	latch-ck = <1>;
+	max-frequency = <200000000>;
+	cap-mmc-highspeed;
+	mmc-hs200-1_8v;
+	cap-mmc-hw-reset;
+	vmmc-supply = <&mt6323_vemc3v3_reg>;
+	vqmmc-supply = <&mt6323_vio18_reg>;
+	non-removable;
+};
+
+&mmc1 {
+	pinctrl-names = "default", "state_uhs";
+	pinctrl-0 = <&mmc1_pins_default>;
+	pinctrl-1 = <&mmc1_pins_uhs>;
+	status = "okay";
+	bus-width = <4>;
+	latch-ck = <1>;
+	max-frequency = <200000000>;
+	cap-sd-highspeed;
+	sd-uhs-sdr50;
+	sd-uhs-sdr104;
+	cd-gpios = <&pio 52 GPIO_ACTIVE_HIGH>;
+	vmmc-supply = <&mt6323_vmch_reg>;
+	vqmmc-supply = <&mt6323_vmc_reg>;
 };
 
 &pwrap {

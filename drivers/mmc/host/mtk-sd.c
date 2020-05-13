@@ -449,6 +449,19 @@ static const struct mtk_mmc_compatible mt8135_compat = {
 	.support_64g = false,
 };
 
+static const struct mtk_mmc_compatible mt8163_compat = {
+	.clk_div_bits = 8,
+	.recheck_sdio_irq = true,
+	.hs400_tune = false,
+	.pad_tune_reg = MSDC_PAD_TUNE,
+	.async_fifo = false,
+	.data_tune = false,
+	.busy_check = false,
+	.stop_clk_fix = false,
+	.enhance_rx = false,
+	.support_64g = false,
+};
+
 static const struct mtk_mmc_compatible mt8173_compat = {
 	.clk_div_bits = 8,
 	.recheck_sdio_irq = true,
@@ -540,6 +553,7 @@ static const struct mtk_mmc_compatible mt7620_compat = {
 
 static const struct of_device_id msdc_of_ids[] = {
 	{ .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
+	{ .compatible = "mediatek,mt8163-mmc", .data = &mt8163_compat},
 	{ .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
 	{ .compatible = "mediatek,mt8183-mmc", .data = &mt8183_compat},
 	{ .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},

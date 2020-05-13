@@ -197,7 +197,33 @@
 		#size-cells = <2>;
 		compatible = "simple-bus";
 		ranges;
+			mmc0: mmc@11230000 {
+			compatible = "mediatek,mt8163-mmc";
+			reg = <0 0x11230000 0 0x1000>;
+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
+			infracfg = <&infracfg>;
+			clocks = <&infracfg CLK_INFRA_MSDC3>,
+					<&infracfg CLK_INFRA_MSDC0>,
+					<&clk_null>;
+			clock-names = "extra", "source", "hclk";
+			status = "disabled";
+		};
 
+		mmc1: mmc@11240000 {
+			compatible = "mediatek,mt8163-mmc";
+			reg = <0 0x11240000 0 0x1000>;
+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
+			clocks = <&infracfg CLK_INFRA_MSDC1>,
+					<&topckgen CLK_TOP_MSDC30_1_SEL>,
+					<&clk_null>;
+			clock-names = "sd_extra", "source", "hclk";
+			status = "disabled";
+		};
+
+
+
+		
+		};
 		chipid: chipid@08000000 {
 			compatible = "mediatek,mt8173-chipid";
 			reg = <0 0x08000000 0 0x0010>;
@@ -240,17 +266,6 @@
 				      "rtc_sel";
 		};
 
-		pmu {
-			compatible = "arm,armv8-pmuv3";
-			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-				<GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>,
-				<GIC_SPI 10 IRQ_TYPE_LEVEL_LOW>,
-				<GIC_SPI 11 IRQ_TYPE_LEVEL_LOW>;
-			interrupt-affinity = <&cpu0>,
-					     <&cpu1>,
-					     <&cpu2>,
-					     <&cpu3>;
-		};
 
 		pio: pinctrl@10005000 {
 			compatible = "mediatek,mt8163-pinctrl";
@@ -290,6 +305,102 @@
 					drive-strength = <MTK_DRIVE_8mA>;
 				};
 			};
+	mmc0_pins_default: mmc0default {
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_137_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+				<MT8163_PIN_136_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
+				<MT8163_PIN_135_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
+				<MT8163_PIN_134_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
+				<MT8163_PIN_130_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
+				<MT8163_PIN_129_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
+				<MT8163_PIN_128_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
+				<MT8163_PIN_127_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+				<MT8163_PIN_132_MSDC0_CMD__FUNC_MSDC0_CMD>;
+			input-enable;
+			bias-pull-up;
+		};
+
+		pins_clk {
+			pinmux = <MT8163_PIN_133_MSDC0_CLK__FUNC_MSDC0_CLK>;
+			bias-pull-down;
+		};
+
+		pins_rst {
+			pinmux = <MT8163_PIN_131_MSDC0_RSTB__FUNC_MSDC0_RSTB>;
+			bias-pull-up;
+		};
+	};
+
+	mmc0_pins_uhs: mmc0@0{
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_137_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+				<MT8163_PIN_136_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
+				<MT8163_PIN_135_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
+				<MT8163_PIN_134_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
+				<MT8163_PIN_130_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
+				<MT8163_PIN_129_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
+				<MT8163_PIN_128_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
+				<MT8163_PIN_127_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+				<MT8163_PIN_132_MSDC0_CMD__FUNC_MSDC0_CMD>;
+			input-enable;
+			drive-strength = <MTK_DRIVE_6mA>;
+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+		};
+
+		pins_clk {
+			pinmux = <MT8163_PIN_133_MSDC0_CLK__FUNC_MSDC0_CLK>;
+			drive-strength = <MTK_DRIVE_6mA>;
+			bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
+		};
+
+		pins_rst {
+			pinmux = <MT8163_PIN_131_MSDC0_RSTB__FUNC_MSDC0_RSTB>;
+			bias-pull-up;
+		};
+	};
+
+	mmc1_pins_default: mmc1default {
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_123_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
+				<MT8163_PIN_124_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
+				<MT8163_PIN_125_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
+				<MT8163_PIN_126_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
+				<MT8163_PIN_121_MSDC1_CMD__FUNC_MSDC1_CMD>;
+			input-enable;
+			drive-strength = <MTK_DRIVE_6mA>;
+			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+		};
+
+		pins_clk {
+			pinmux = <MT8163_PIN_122_MSDC1_CLK__FUNC_MSDC1_CLK>;
+			drive-strength = <MTK_DRIVE_6mA>;
+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+		};
+
+		pins_insert {
+			pinmux = <MT8163_PIN_52_EINT20__FUNC_GPIO52>;
+			bias-pull-up;
+		};
+	};
+
+	mmc1_pins_uhs: mmc1@0 {
+		pins_cmd_dat {
+			pinmux = <MT8163_PIN_123_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
+				<MT8163_PIN_124_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
+				<MT8163_PIN_125_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
+				<MT8163_PIN_126_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
+				<MT8163_PIN_121_MSDC1_CMD__FUNC_MSDC1_CMD>;
+			input-enable;
+			drive-strength = <MTK_DRIVE_8mA>;
+			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+		};
+
+		pins_clk {
+			pinmux = <MT8163_PIN_122_MSDC1_CLK__FUNC_MSDC1_CLK>;
+			drive-strength = <MTK_DRIVE_8mA>;
+			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+		};
+	};
 
 			/* UART GPIO Settings - Start */
 			/* UART0: rx set, rx clear, tx clear, tx clear*/
@@ -639,5 +750,5 @@
 		};
 /* led end*/
 };
-};
+
 
