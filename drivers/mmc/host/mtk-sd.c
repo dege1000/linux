@@ -450,12 +450,12 @@ static const struct mtk_mmc_compatible mt8135_compat = {
 };
 
 static const struct mtk_mmc_compatible mt8163_compat = {
-	.clk_div_bits = 8,
-	.recheck_sdio_irq = true,
+	.clk_div_bits = 12,
+	.recheck_sdio_irq = false,
 	.hs400_tune = false,
-	.pad_tune_reg = MSDC_PAD_TUNE,
-	.async_fifo = false,
-	.data_tune = false,
+	.pad_tune_reg = MSDC_PAD_TUNE0,
+	.async_fifo = true,
+	.data_tune = true,
 	.busy_check = false,
 	.stop_clk_fix = false,
 	.enhance_rx = false,
@@ -2233,24 +2233,28 @@ static int msdc_drv_probe(struct platform_device *pdev)
 	struct msdc_host *host;
 	struct resource *res;
 	int ret;
-
+    printk("mt sd probe begin");
 	if (!pdev->dev.of_node) {
+            printk("mt sd no DT found");
 		dev_err(&pdev->dev, "No DT found\n");
 		return -EINVAL;
 	}
 
 	/* Allocate MMC host for this device */
 	mmc = mmc_alloc_host(sizeof(struct msdc_host), &pdev->dev);
-	if (!mmc)
+	if (!mmc){
+        printk("Not mmc");
 		return -ENOMEM;
-
+}
 	host = mmc_priv(mmc);
 	ret = mmc_of_parse(mmc);
-	if (ret)
+	if (ret){
+        printk("if (ret)");
 		goto host_free;
-
+}
 	host->base = devm_platform_ioremap_resource(pdev, 0);
 	if (IS_ERR(host->base)) {
+        printk("if (IS_ERR(host->base))");
 		ret = PTR_ERR(host->base);
 		goto host_free;
 	}
@@ -2263,11 +2267,14 @@ static int msdc_drv_probe(struct platform_device *pdev)
 	}
 
 	ret = mmc_regulator_get_supply(mmc);
-	if (ret)
+    printk("mt sd checks begin");
+	if (ret){
+        printk("mmc_regulator_get_supply(mmc): ret = %d", ret);
 		goto host_free;
-
+}
 	host->src_clk = devm_clk_get(&pdev->dev, "source");
 	if (IS_ERR(host->src_clk)) {
+        printk("IS_ERR(host->src_clk)");
 		ret = PTR_ERR(host->src_clk);
 		goto host_free;
 	}
@@ -2312,7 +2319,7 @@ static int msdc_drv_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "Cannot find pinctrl uhs!\n");
 		goto host_free;
 	}
-
+    printk("mt sd passsed pinctrl");
 	msdc_of_property_parse(pdev, host);
 
 	host->dev = &pdev->dev;
@@ -2335,7 +2342,7 @@ static int msdc_drv_probe(struct platform_device *pdev)
 		 */
 		host->internal_cd = true;
 	}
-
+    printk("mt sd set host params");
 	if (mmc->caps & MMC_CAP_SDIO_IRQ)
 		mmc->caps2 |= MMC_CAP2_SDIO_IRQ_NOTHREAD;
 
@@ -2367,9 +2374,10 @@ static int msdc_drv_probe(struct platform_device *pdev)
 		goto release_mem;
 	}
 	msdc_init_gpd_bd(host, &host->dma);
+    printk("mt sd got to delay");
 	INIT_DELAYED_WORK(&host->req_timeout, msdc_request_timeout);
 	spin_lock_init(&host->lock);
-
+    printk("mt sd passed delay");
 	platform_set_drvdata(pdev, mmc);
 	msdc_ungate_clock(host);
 	msdc_init_hw(host);

@@ -393,7 +393,6 @@ static void fb_flashcursor(struct work_struct *work)
 	int c;
 	int mode;
 	int ret;
-
 	/* FIXME: we should sort out the unbind locking instead */
 	/* instead we just fail to flash the cursor if we can't get
 	 * the lock instead of blocking fbcon deinit */
@@ -410,7 +409,6 @@ static void fb_flashcursor(struct work_struct *work)
 		console_unlock();
 		return;
 	}
-
 	c = scr_readw((u16 *) vc->vc_pos);
 	mode = (!ops->cursor_flash || ops->cursor_state.enable) ?
 		CM_ERASE : CM_DRAW;
@@ -426,6 +424,7 @@ static void cursor_timer_handler(struct timer_list *t)
 
 	queue_work(system_power_efficient_wq, &info->queue);
 	mod_timer(&ops->cursor_timer, jiffies + ops->cur_blink_jiffies);
+
 }
 
 static void fbcon_add_cursor_timer(struct fb_info *info)
@@ -442,6 +441,7 @@ static void fbcon_add_cursor_timer(struct fb_info *info)
 		mod_timer(&ops->cursor_timer, jiffies + ops->cur_blink_jiffies);
 		ops->flags |= FBCON_FLAGS_CURSOR_TIMER;
 	}
+
 }
 
 static void fbcon_del_cursor_timer(struct fb_info *info)
@@ -595,7 +595,6 @@ static int do_fbcon_takeover(int show_logo)
 	} else {
 		fbcon_has_console_bind = 1;
 	}
-
 	return err;
 }
 

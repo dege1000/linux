@@ -1576,6 +1576,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 * For SPI, enable CRC as appropriate.
 	 */
 	if (mmc_host_is_spi(host)) {
+        printk("chip is spi\n");
 		err = mmc_spi_set_crc(host, use_spi_crc);
 		if (err)
 			goto err;
@@ -2217,7 +2218,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	mmc_attach_bus(host, &mmc_ops);
 	if (host->ocr_avail_mmc)
 		host->ocr_avail = host->ocr_avail_mmc;
-
+    
 	/*
 	 * We need to get OCR a different way for SPI.
 	 */
@@ -2226,9 +2227,9 @@ int mmc_attach_mmc(struct mmc_host *host)
 		if (err)
 			goto err;
 	}
-
+    printk("mmc ocr: %d", ocr);
 	rocr = mmc_select_voltage(host, ocr);
-
+    
 	/*
 	 * Can we support the voltage of the card?
 	 */

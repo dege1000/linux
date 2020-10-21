@@ -809,6 +809,7 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
 		 * it now and return the interrupt number.
 		 */
 		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
+            printk("irq_get_trigger_type(virq) == IRQ_TYPE_NONE");
 			irq_data = irq_get_irq_data(virq);
 			if (!irq_data)
 				return 0;

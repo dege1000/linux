@@ -320,13 +320,11 @@ static int mt8163_spec_ies_get(struct regmap *regmap, unsigned int pin)
 	return mtk_spec_get_ies_smt_range(regmap, mt8163_ies_set,
 		ARRAY_SIZE(mt8163_ies_set), pin);
 }
-
 static int mt8163_spec_smt_get(struct regmap *regmap, unsigned int pin)
 {
 	return mtk_spec_get_ies_smt_range(regmap, mt8163_smt_set,
 		ARRAY_SIZE(mt8163_smt_set), pin);
 }
-
 static int mt8163_spec_pull_get(struct regmap *regmap, unsigned int pin)
 {
 	return mtk_spec_pull_get_samereg(regmap, mt8163_spec_pupd,
@@ -366,6 +364,7 @@ static const struct mtk_pinctrl_devdata mt8163_pinctrl_data = {
 
 static int mt8163_pinctrl_probe(struct platform_device *pdev)
 {
+    printk("mt8163_pinctrl_probe, returning mtk_pctrl_init(pdev, &mt8163_pinctrl_data, NULL);");
 	return mtk_pctrl_init(pdev, &mt8163_pinctrl_data, NULL);
 }
 
@@ -388,5 +387,6 @@ static int __init mtk_pinctrl_init(void)
 {
 	return platform_driver_register(&mtk_pinctrl_driver);
 }
+arch_initcall(mtk_pinctrl_init);
 
 

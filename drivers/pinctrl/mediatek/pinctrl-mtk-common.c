@@ -1023,7 +1023,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
 	struct device_node *np = pdev->dev.of_node, *node;
 	struct property *prop;
 	int ret, i;
-
+    printk("mtk_pctrl_init begins");
 	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
 	if (!pctl)
 		return -ENOMEM;
@@ -1032,6 +1032,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
 
 	prop = of_find_property(np, "pins-are-numbered", NULL);
 	if (!prop) {
+        printk("only support pins-are-numbered format");
 		dev_err(&pdev->dev, "only support pins-are-numbered format\n");
 		return -EINVAL;
 	}
@@ -1044,6 +1045,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
 	} else if (regmap) {
 		pctl->regmap1  = regmap;
 	} else {
+        printk("Pinctrl node has not register regmap.");
 		dev_err(&pdev->dev, "Pinctrl node has not register regmap.\n");
 		return -EINVAL;
 	}
@@ -1059,6 +1061,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
 	pctl->devdata = data;
 	ret = mtk_pctrl_build_state(pdev);
 	if (ret) {
+        printk("build state failed");
 		dev_err(&pdev->dev, "build state failed: %d\n", ret);
 		return -EINVAL;
 	}
@@ -1083,6 +1086,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
 	pctl->pctl_dev = devm_pinctrl_register(&pdev->dev, &pctl->pctl_desc,
 					       pctl);
 	if (IS_ERR(pctl->pctl_dev)) {
+        printk("couldn't register pinctrl driver");
 		dev_err(&pdev->dev, "couldn't register pinctrl driver\n");
 		return PTR_ERR(pctl->pctl_dev);
 	}
@@ -1112,10 +1116,11 @@ int mtk_pctrl_init(struct platform_device *pdev,
 	ret = mtk_eint_init(pctl, pdev);
 	if (ret)
 		goto chip_error;
-
+    printk("mt pinctrl is probed ok");
 	return 0;
 
 chip_error:
 	gpiochip_remove(pctl->chip);
+    printk("mt pinctrl failed :(");
 	return ret;
 }

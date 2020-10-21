@@ -346,85 +346,49 @@ static const char * const rtc_parents[] __initconst = {
 	"clk26m",
 	"univpll3_d8"
 };
-/*
-static const struct mtk_mux_upd top_muxes[] __initconst = {
 
-	MUX_UPD(CLK_TOP_AXI_SEL, "axi_sel", axi_parents,
-		0x0040, 0, 1, 7, 0x0004, 0),
-	MUX_UPD(CLK_TOP_MEM_SEL, "mem_sel", mem_parents,
-		0x0040, 8, 2, 15, 0x0004, 1),
-	MUX_UPD(CLK_TOP_DDRPHYCFG_SEL, "ddrphycfg_sel", ddrphycfg_parents,
-		0x0040, 16, 1, 23, 0x0004, 2),
-	MUX_UPD(CLK_TOP_MM_SEL, "mm_sel", mm_parents,
-		0x0040, 24, 2, 31, 0x0004, 3),
+static const struct mtk_composite top_muxes[] __initconst = {
+	/* CLK_CFG_0 */
+	MUX(CLK_TOP_AXI_SEL, "axi_sel", axi_parents, 0x0040, 0, 3),
+	MUX(CLK_TOP_MEM_SEL, "mem_sel", mem_parents, 0x0040, 8, 1),
+	MUX_GATE(CLK_TOP_DDRPHYCFG_SEL, "ddrphycfg_sel", ddrphycfg_parents, 0x0040, 16, 1, 23),
+	MUX_GATE(CLK_TOP_MM_SEL, "mm_sel", mm_parents, 0x0040, 24, 4, 31),
+	/* CLK_CFG_1 */
+	MUX_GATE(CLK_TOP_PWM_SEL, "pwm_sel", pwm_parents, 0x0050, 0, 2, 7),
+	MUX_GATE(CLK_TOP_VDEC_SEL, "vdec_sel", vdec_parents, 0x0050, 8, 4, 15),
+	MUX_GATE(CLK_TOP_MFG_SEL, "mfg_sel", mfg_parents, 0x0050, 24, 4, 31),
+	/* CLK_CFG_2 */
+	MUX_GATE(CLK_TOP_CAMTG_SEL, "camtg_sel", camtg_parents, 0x0060, 0, 3, 7),
+	MUX_GATE(CLK_TOP_UART_SEL, "uart_sel", uart_parents, 0x0060, 8, 1, 15),
+	MUX_GATE(CLK_TOP_SPI_SEL, "spi_sel", spi_parents, 0x0060, 16, 3, 23),
 
-	MUX_UPD(CLK_TOP_PWM_SEL, "pwm_sel", pwm_parents,
-		0x0050, 0, 2, 7, 0x0004, 4),
-	MUX_UPD(CLK_TOP_VDEC_SEL, "vdec_sel", vdec_parents,
-		0x0050, 8, 3, 15, 0x0004, 5),
-	MUX_UPD(CLK_TOP_MFG_SEL, "mfg_sel", mfg_parents,
-		0x0050, 24, 2, 31, 0x0004, 7),
+	/* CLK_CFG_4 */
+	MUX_GATE(CLK_TOP_MSDC30_2_SEL, "msdc30_2_sel", msdc30_2_parents, 0x0080, 0, 3, 7),
+	MUX_GATE(CLK_TOP_AUDIO_SEL, "audio_sel", audio_parents, 0x0080, 16, 2, 23),
+	MUX_GATE(CLK_TOP_AUD_INTBUS_SEL, "aud_intbus_sel", aud_intbus_parents, 0x0080, 24, 3, 31),
+	/* CLK_CFG_5 */
+	MUX_GATE(CLK_TOP_PMICSPI_SEL, "pmicspi_sel", pmicspi_parents, 0x0090, 0, 3, 7 /* 7:5 */),
+	MUX_GATE(CLK_TOP_SCP_SEL, "scp_sel", scp_parents, 0x0090, 8, 3, 15),
+	MUX_GATE(CLK_TOP_ATB_SEL, "atb_sel", atb_parents, 0x0090, 16, 2, 23),
 
-	MUX_UPD(CLK_TOP_CAMTG_SEL, "camtg_sel", camtg_parents,
-		0x0060, 0, 2, 7, 0x0004, 8),
-	MUX_UPD(CLK_TOP_UART_SEL, "uart_sel", uart_parents,
-		0x0060, 8, 1, 15, 0x0004, 9),
-	MUX_UPD(CLK_TOP_SPI_SEL, "spi_sel", spi_parents,
-		0x0060, 16, 1, 23, 0x0004, 10),
+	/* CLK_CFG_6 */
+	/*
+	 * The dpi0_sel clock should not propagate rate changes to its parent
+	 * clock so the dpi driver can have full control over PLL and divider.
+	 */
 
-	MUX_UPD(CLK_TOP_MSDC30_0_SEL, "msdc30_0_sel", msdc30_0_parents,
-		0x0070, 0, 3, 7, 0x0004, 12),
-	MUX_UPD(CLK_TOP_MSDC30_1_SEL, "msdc30_1_sel", msdc30_1_parents,
-		0x0070, 8, 3, 15, 0x0004, 13),
-	MUX_UPD(CLK_TOP_MSDC30_2_SEL, "msdc30_2_sel", msdc30_2_parents,
-		0x0070, 16, 3, 23, 0x0004, 14),
+	MUX_GATE(CLK_TOP_AUD_1_SEL, "aud_1_sel", aud_1_parents, 0x00a0, 24, 2, 31),
+	/* CLK_CFG_7 */
+	MUX_GATE(CLK_TOP_AUD_2_SEL, "aud_2_sel", aud_2_parents, 0x00b0, 0, 2, 7),
 
-	MUX_UPD(CLK_TOP_MSDC50_3_HSEL, "msdc50_3_hsel", msdc50_3_h_parents,
-		0x0080, 0, 2, 7, 0x0004, 15),
-	MUX_UPD(CLK_TOP_MSDC50_3_SEL, "msdc50_3_sel", msdc50_3_parents,
-		0x0080, 8, 4, 15, 0x0004, 16),
-	MUX_UPD(CLK_TOP_AUDIO_SEL, "audio_sel", audio_parents,
-		0x0080, 16, 2, 23, 0x0004, 17),
-	MUX_UPD(CLK_TOP_AUD_INTBUS_SEL, "aud_intbus_sel", aud_intbus_parents,
-		0x0080, 24, 2, 31, 0x0004, 18),
+	MUX_GATE(CLK_TOP_SCAM_SEL, "scam_sel", scam_parents, 0x00b0, 24, 2, 31),
+	/* CLK_CFG_12 */
+	
+	/* CLK_CFG_13 */
 
-	MUX_UPD(CLK_TOP_PMICSPI_SEL, "pmicspi_sel", pmicspi_parents,
-		0x0090, 0, 1, 7, 0x0004, 19),
-	MUX_UPD(CLK_TOP_SCP_SEL, "scp_sel", scp_parents,
-		0x0090, 8, 2, 15, 0x0004, 20),
-	MUX_UPD(CLK_TOP_ATB_SEL, "atb_sel", atb_parents,
-		0x0090, 16, 1, 23, 0x0004, 21),
-	MUX_UPD(CLK_TOP_MJC_SEL, "mjc_sel", mjc_parents,
-		0x0090, 24, 2, 31, 0x0004, 22),
-
-	MUX_UPD(CLK_TOP_DPI0_SEL, "dpi0_sel", dpi0_parents,
-		0x00a0, 0, 3, 7, 0x0004, 23),
-	MUX_UPD(CLK_TOP_SCAM_SEL, "scam_sel", scam_parents,
-		0x00a0, 8, 1, 15, 0x0004, 24),
-	MUX_UPD(CLK_TOP_AUD_1_SEL, "aud_1_sel", aud_1_parents,
-		0x00a0, 16, 1, 23, 0x0004, 25),
-	MUX_UPD(CLK_TOP_AUD_2_SEL, "aud_2_sel", aud_2_parents,
-		0x00a0, 24, 1, 31, 0x0004, 26),
-
-	MUX_UPD(CLK_TOP_DPI1_SEL, "dpi1_sel", dpi1_parents,
-		0x00b0, 0, 3, 7, 0x0004, 6),
-	MUX_UPD(CLK_TOP_UFOENC_SEL, "ufoenc_sel", ufoenc_parents,
-		0x00b0, 8, 3, 15, 0x0004, 27),
-	MUX_UPD(CLK_TOP_UFODEC_SEL, "ufodec_sel", ufodec_parents,
-		0x00b0, 16, 3, 23, 0x0004, 28),
-	MUX_UPD(CLK_TOP_ETH_SEL, "eth_sel", eth_parents,
-		0x00b0, 24, 4, 31, 0x0004, 29),
-
-	MUX_UPD(CLK_TOP_ONFI_SEL, "onfi_sel", onfi_parents,
-		0x00c0, 0, 3, 7, 0x0004, 30),
-	MUX_UPD(CLK_TOP_SNFI_SEL, "snfi_sel", snfi_parents,
-		0x00c0, 8, 2, 15, 0x0004, 31),
-	MUX_UPD(CLK_TOP_HDMI_SEL, "hdmi_sel", hdmi_parents,
-		0x00c0, 16, 2, 23, 0x0004, 11),
-	MUX_UPD(CLK_TOP_RTC_SEL, "rtc_sel", rtc_parents,
-		0x00c0, 24, 2, 31, 0x0008, 0),
+	MUX(CLK_TOP_RTC_SEL, "rtc_sel", rtc_parents, 0x00d0, 24, 2),
 };
-*/
+
 static const struct mtk_gate_regs infra0_cg_regs = {
 	.set_ofs = 0x0080,
 	.clr_ofs = 0x0084,
@@ -454,6 +418,7 @@ static const struct mtk_gate_regs infra1_cg_regs = {
 		.shift = _shift,				\
 		.ops = &mtk_clk_gate_ops_setclr,		\
 	}
+
 
 static const struct mtk_gate infra_clks[] __initconst = {
 	/* INFRA0 */
@@ -903,14 +868,15 @@ static void __init mtk_topckgen_init(struct device_node *node)
 
 	mtk_clk_register_factors(root_clks, ARRAY_SIZE(root_clks), clk_data);
 	mtk_clk_register_factors(top_divs, ARRAY_SIZE(top_divs), clk_data);
-//	mtk_clk_register_mux_upds(top_muxes, ARRAY_SIZE(top_muxes), base,
-//			&mt8163_clk_lock, clk_data);
+	mtk_clk_register_composites(top_muxes, ARRAY_SIZE(top_muxes), base,
+			&mt8163_clk_lock, clk_data);
+
 
 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
 	if (r)
 		pr_err("%s(): could not register clock provider: %d\n",
 			__func__, r);
-
+    printk("topckgen init");
 	mtk_clk_enable_critical();
 }
 CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt8163-topckgen", mtk_topckgen_init);
@@ -1136,7 +1102,7 @@ static void __init mtk_vencsys_init(struct device_node *node)
 
 	mtk_clk_register_gates(node, venc_clks, ARRAY_SIZE(venc_clks),
 						clk_data);
-
+    printk("vencsys is up");
 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
 	if (r)
 		pr_err("%s(): could not register clock provider: %d\n",

@@ -454,6 +454,7 @@ static irqreturn_t gpio_keys_irq_isr(int irq, void *dev_id)
 		}
 
 		bdata->key_pressed = true;
+        printk("key pressed");
 	}
 
 	if (bdata->release_delay)
@@ -761,6 +762,7 @@ MODULE_DEVICE_TABLE(of, gpio_keys_of_match);
 
 static int gpio_keys_probe(struct platform_device *pdev)
 {
+    printk("probing gpio key");
 	struct device *dev = &pdev->dev;
 	const struct gpio_keys_platform_data *pdata = dev_get_platdata(dev);
 	struct fwnode_handle *child = NULL;
@@ -854,7 +856,7 @@ static int gpio_keys_probe(struct platform_device *pdev)
 	}
 
 	device_init_wakeup(dev, wakeup);
-
+    printk("gpio-key is probed ok, returning 0");
 	return 0;
 }
 

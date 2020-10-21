@@ -493,6 +493,7 @@ static int mtk8250_probe_of(struct platform_device *pdev, struct uart_port *p,
 
 static int mtk8250_probe(struct platform_device *pdev)
 {
+    printk("Mtk uart prob begin");
 	struct uart_8250_port uart = {};
 	struct resource *regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
@@ -553,11 +554,12 @@ static int mtk8250_probe(struct platform_device *pdev)
 		return err;
 
 	data->line = serial8250_register_8250_port(&uart);
-	if (data->line < 0)
+	if (data->line < 0){
+        printk("data line < 0");
 		return data->line;
-
+}
 	data->rx_wakeup_irq = platform_get_irq_optional(pdev, 1);
-
+    printk("It seems mtk uart is probed ok, returning 0. :)");
 	return 0;
 }
 

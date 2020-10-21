@@ -984,10 +984,11 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
 {
 	struct uart_8250_port *uart;
 	int ret = -ENOSPC;
-
-	if (up->port.uartclk == 0)
+    printk("8250 register begin");
+	if (up->port.uartclk == 0){
+        printk("port.uartclk == 0");
 		return -EINVAL;
-
+}
 	mutex_lock(&serial_mutex);
 
 	uart = serial8250_find_match_or_unused(&up->port);
@@ -1114,7 +1115,7 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
 
 out_unlock:
 	mutex_unlock(&serial_mutex);
-
+    printk("8250 registerd ok");
 	return ret;
 }
 EXPORT_SYMBOL(serial8250_register_8250_port);
